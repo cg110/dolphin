@@ -131,7 +131,7 @@ void HiresTexture::Update()
 		}
 
 		s_textureCacheAbortLoading.Clear();
-		s_prefetcher = std::thread(Prefetch);
+		//s_prefetcher = std::thread(Prefetch);
 	}
 }
 
@@ -140,7 +140,7 @@ void HiresTexture::Prefetch()
 	Common::SetCurrentThreadName("Prefetcher");
 
 	size_t size_sum = 0;
-	size_t max_mem = MemPhysical() / 2;
+	size_t max_mem = MemPhysical() - (2UL *1024*1024*1024);
 	u32 starttime = Common::Timer::GetTimeMs();
 	for (const auto& entry : s_textureMap)
 	{
@@ -353,7 +353,7 @@ std::shared_ptr<HiresTexture> HiresTexture::Search(const u8* texture, size_t tex
 
 	std::shared_ptr<HiresTexture> ptr(Load(base_filename, width, height));
 
-	if (ptr && g_ActiveConfig.bCacheHiresTextures)
+	if (g_ActiveConfig.bCacheHiresTextures)
 	{
 		s_textureCache[base_filename] = ptr;
 	}
